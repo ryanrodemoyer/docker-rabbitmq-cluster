@@ -5,7 +5,7 @@ Docker images to run RabbitMQ cluster. It extends the official image with a rabb
 Once you clone the project locally use [captain](https://github.com/harbur/captain) to build the image or do with docker:
 
 ```
-docker build -t harbur/rabbitmq-cluster .
+docker build -t ryanrodemoyer/rabbitmq-cluster .
 ```
 
 # Running with docker-compose
@@ -20,7 +20,7 @@ By default 3 nodes are started up this way:
 
 ```
 rabbit1:
-  image: harbur/rabbitmq-cluster
+  image: ryanrodemoyer/rabbitmq-cluster
   hostname: rabbit1
   environment:
     - ERLANG_COOKIE=abcdefg
@@ -28,20 +28,18 @@ rabbit1:
     - "5672:5672"
     - "15672:15672"
 rabbit2:
-  image: harbur/rabbitmq-cluster
+  image: ryanrodemoyer/rabbitmq-cluster
   hostname: rabbit2
   links:
     - rabbit1
   environment:
     - ERLANG_COOKIE=abcdefg
     - CLUSTER_WITH=rabbit1
-    - ENABLE_RAM=true
-    - RAM_NODE=true
   ports:
     - "5673:5672"
     - "15673:15672"
 rabbit3:
-  image: harbur/rabbitmq-cluster
+  image: ryanrodemoyer/rabbitmq-cluster
   hostname: rabbit3
   links:
     - rabbit1
@@ -51,14 +49,15 @@ rabbit3:
     - CLUSTER_WITH=rabbit1
   ports:
     - "5674:5672"
+    - "15673:15672"
 ```
 
 If needed, additional nodes can be added to this file.
 
 Once cluster is up:
-* The management console can be accessed at `http://hostip:15672`
+* The management console can be accessed at `http://hostip:15672` or `http://hostip:15673` or `http://hostip:15674`.
 * The connection host should look like this: `hostip:5672,hostip:5673,hostip:5674`
 
 # Credits
-
+* Forked from https://github.com/harbur/docker-rabbitmq-cluster
 * Inspired by https://github.com/bijukunjummen/docker-rabbitmq-cluster
